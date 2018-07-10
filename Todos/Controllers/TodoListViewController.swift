@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class TodoListViewController: UITableViewController {
+class TodoListViewController: SwipeTableViewController {
     
     let realm = try! Realm()
     var todoItems: Results<Item>?
@@ -33,7 +33,7 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = todoItems?[indexPath.row] {
             
@@ -50,7 +50,7 @@ class TodoListViewController: UITableViewController {
     //MARK: - TableView Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+
         if let item = todoItems?[indexPath.row] {
             do {
                 try realm.write {
@@ -60,9 +60,9 @@ class TodoListViewController: UITableViewController {
                 print("Error saving isDone status \(error)")
             }
         }
-        
+
         tableView.reloadData()
-        
+
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -111,6 +111,21 @@ class TodoListViewController: UITableViewController {
         
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
         tableView.reloadData()
+    }
+    
+    //MARK: - Delete Data from Swipe
+    
+    override func updateModel(at indexPath: IndexPath) {
+        
+        if let itemToDeletion = todoItems?[indexPath.row] {
+            do {
+                try realm.write {
+                    realm.delete(itemToDeletion)
+                }
+            }catch {
+                print("Error deleting Item from Swipe, \(error)")
+            }
+        }
     }
     
 }
