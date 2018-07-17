@@ -131,7 +131,6 @@ class CategoryViewController: SwipeTableViewController {
             }
             
         }
-        tableView.reloadData()
     }
 }
 

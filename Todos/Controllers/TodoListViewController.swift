@@ -59,13 +59,13 @@ class TodoListViewController: SwipeTableViewController {
     //MARK: - Tableview Datasource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
+
         return todoItems?.count ?? 1
         
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = todoItems?[indexPath.row] {
@@ -146,7 +146,7 @@ class TodoListViewController: SwipeTableViewController {
     //MARK: - Model Manipulation Methods
     
     func loadItems() {
-        
+
         todoItems = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
         tableView.reloadData()
         
@@ -157,6 +157,7 @@ class TodoListViewController: SwipeTableViewController {
     override func updateModel(at indexPath: IndexPath) {
 
         if let itemToDeletion = todoItems?[indexPath.row] {
+   
             do {
                 try realm.write {
                     realm.delete(itemToDeletion)
@@ -165,7 +166,6 @@ class TodoListViewController: SwipeTableViewController {
                 print("Error deleting Item from Swipe, \(error)")
             }
         }
-        tableView.reloadData()
     }
     
 }
